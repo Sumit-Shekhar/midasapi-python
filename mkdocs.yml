@@ -1,9 +1,9 @@
-site_name: "mkdocs-shadcn"
-site_url: "https://asiffer.github.io/mkdocs-shadcn"
-site_description: "Documentation that also shines"
-site_author: "Alban Siffer <31479857+asiffer@users.noreply.github.com>"
+site_name: "MIDAS Python"
+site_url: "https://sumit-shekhar.github.io/midasapi-python/"
+site_description: "Documentation"
+site_author: "Sumit Shekhar"
 dev_addr: "127.0.0.1:8080"
-repo_url: "https://github.com/asiffer/mkdocs-shadcn"
+repo_url: "https://github.com/Sumit-Shekhar/midasapi-python"
 theme:
   name: shadcn
   pygments_style: "github-dark"

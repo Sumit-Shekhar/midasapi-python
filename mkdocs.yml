@@ -1,0 +1,36 @@
+site_name: MIDAS Python Manual
+site_url: https://sumit.com
+theme:
+  name: shadcn
+  palette: 
+    primary: black
+
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - toc.integrate
+    - toc.follow
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - content.code.copy
+
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+
+copyright: Made by Sumit Shekhar... ✅
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - codehilite
+
+plugins:
+  - search

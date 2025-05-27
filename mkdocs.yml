@@ -2,8 +2,7 @@ site_name: MIDAS Python Manual
 site_url: https://sumit.com
 theme:
   name: shadcn
-  palette: 
-    primary: black
+  pygments_style: "github-dark"
 
   features:
     - navigation.instant
@@ -20,7 +19,9 @@ theme:
     text: Roboto
     code: Roboto Mono
 
-
+plugins:
+  - search
+  
 copyright: Made by Sumit Shekhar... ✅
 
 extra:
@@ -32,5 +33,3 @@ markdown_extensions:
   - admonition
   - codehilite
 
-plugins:
-  - search

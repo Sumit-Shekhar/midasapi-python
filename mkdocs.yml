@@ -2,11 +2,10 @@ site_name: "MIDAS Python"
 site_url: "https://sumit-shekhar.github.io/midasapi-python/"
 site_description: "Documentation"
 site_author: "Sumit Shekhar"
-dev_addr: "127.0.0.1:8080"
 repo_url: "https://github.com/Sumit-Shekhar/midasapi-python"
 theme:
   name: shadcn
-  pygments_style: "github-dark"
+  # pygments_style: "github-dark"
 
 # nav:
 #   - Welcome: index.md
@@ -17,7 +16,6 @@ theme:
 
 plugins:
   - search # put it first to inject out custom code
-  - excalidraw
 
 markdown_extensions:
   admonition:

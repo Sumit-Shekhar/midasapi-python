@@ -1,6 +1,6 @@
 # Thickness
 
-The Thickness class is used to manage and synchronize thickness data with MIDAS Civil NX .
+The Thickness class is used to manage and synchronize thickness data with MIDAS Civil NX.
 
 ## Constructor
 **<font color="green">`Thickness(thick=0.0,thick_out=-1,offset=0,off_type='rat',name="",id=0)`</font>**

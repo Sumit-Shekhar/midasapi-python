@@ -46,7 +46,7 @@ for n in Node.nodes:
 
 ## Methods
 
-### json
+### <font style="font-size:0px">Node.</font>json 
 Returns a JSON representation of all Nodes defined in python.
 
 ```py
@@ -60,7 +60,7 @@ print(Node.json())
 
 ```
 
-### create
+### <font style="font-size:0px">Node.</font>create
 Sends the current node list to the Civil NX using a PUT request.  
 New nodes are created and existing nodes(same ID) in Civil NX will be updated.
 
@@ -72,7 +72,7 @@ Node.create()
 
 ```
 
-### get
+### <font style="font-size:0px">Node.</font>get
 Fetches nodes from the Civil NX and return the JSON representation.  
 *-Here, Civil model had 2 nodes* 
 ```py
@@ -81,7 +81,7 @@ print(Node.get())
 # {'NODE': {'1': {'X': 1, 'Y': 2, 'Z': 3}, '2': {'X': 1, 'Y': 3, 'Z': 2}}}
 ```
 
-### sync
+### <font style="font-size:0px">Node.</font>sync
 Retrieves Node data from the Civil NX and rebuilds the internal node list.  
 *-Here, Civil model had 2 nodes* 
 ```py
@@ -96,7 +96,7 @@ for n in Node.nodes:
 ```
 
 
-### delete
+### <font style="font-size:0px">Node.</font>delete
 Deletes all node data from both Python and Civil NX.
 
 ```py

@@ -16,7 +16,7 @@ MAPI_KEY('eyJ1ciI6InN1bWl0QG1pZGFzaXQuY29tIiwicGciO252k81571d')
 
 Creates a construction stage with specified parameters for structure, boundary, and load group management.
 
-#### Parameters
+### Parameters
 * `name`: Name of the construction stage
 * `duration (default=0)`: Duration of construction stage in days
 * `s_group (default=None)`: Structure group name or list of group names
@@ -42,82 +42,137 @@ Creates a construction stage with specified parameters for structure, boundary, 
 
 #### Single Group Activation
 ```py
-# Create groups first
-Group.Structure("Main Girder", nlist=[1, 2, 3], elist=[1, 2])
-Group.Boundary("Support Group")
-Group.Load("Dead Load Group")
+#Create Node and Element
+for j in range(6):
+    for i in range(2):
+        Node(i*10,j*2,0)
+        Node.create()
+j = 0
+for k in range(6):   
+    for i in range(1,2):
+        Element.Beam(i +j,i+1 +j)
+        Element.create()
+    j = j + 2
+
+
+# Create structural groups
+Group.Structure("CS1", nlist=[1, 2], elist=[1])
+Group.Structure("CS2", nlist=[3, 4, 5,6], elist=[2, 3])
+Group.Structure("CS3", nlist=[7, 8, 9,10], elist=[4, 5,6])
+
+# Create boundary and load groups
+Group.Boundary("BG1")
+Group.Boundary("BG2")
+Group.Load("Load group 1")
+Group.Load("Load group 2")
+
 Group.create()
 
-# Create construction stage with single group activation
-cs1 = CS("Stage 1", 
-         duration=7, 
-         s_group="Main Girder", 
-         s_age=7, 
-         s_type="A",
-         b_group="Support Group", 
-         b_pos="DEFORMED", 
-         b_type="A",
-         l_group="Dead Load Group", 
-         l_day="FIRST", 
-         l_type="A")
-
-print(f'Stage: {cs1.NAME} | Duration: {cs1.DURATION} days')
+#Create Stage
+CS("Stage 1",7,"CS1",10,"A","BG1","DEFORMED","A","Load Group 1","FIRST","A")
+CS.create()
 ```
 
 #### Multiple Group Activation
 ```py
-# Create multiple groups
-Group.Structure("Girder 1", elist=[1, 2])
-Group.Structure("Girder 2", elist=[3, 4])
-Group.Boundary("Support 1")
-Group.Boundary("Support 2")
-Group.Load("Dead Load")
-Group.Load("Live Load")
+#Create Node and Element
+for j in range(6):
+    for i in range(2):
+        Node(i*10,j*2,0)
+        Node.create()
+j = 0
+for k in range(6):   
+    for i in range(1,2):
+        Element.Beam(i +j,i+1 +j)
+        Element.create()
+    j = j + 2
+
+
+# Create structural groups
+Group.Structure("CS1", nlist=[1, 2], elist=[1])
+Group.Structure("CS2", nlist=[3, 4, 5,6], elist=[2, 3])
+Group.Structure("CS3", nlist=[7, 8, 9,10], elist=[4, 5,6])
+
+# Create boundary and load groups
+Group.Boundary("BG1")
+Group.Boundary("BG2")
+Group.Load("Load group 1")
+Group.Load("Load group 2")
+
 Group.create()
 
-# Create construction stage with multiple groups
-cs2 = CS("Stage 2", 
-         duration=14,
-         s_group=["Girder 1", "Girder 2"], 
-         s_age=[7, 10], 
-         s_type=["A", "A"],
-         b_group=["Support 1", "Support 2"], 
-         b_pos=["DEFORMED", "DEFORMED"], 
-         b_type=["A", "A"],
-         l_group=["Dead Load", "Live Load"], 
-         l_day=["FIRST", "FIRST"], 
-         l_type=["A", "A"])
+#Create Stage
+CS("Stage 1",17,["CS1","CS2"],[10,7],"A",["BG1","BG2"],["DEFORMED","ORIGINAL"],"A","Load Group 1","FIRST","A")
+CS.create()
 ```
 
 #### Mixed Activation and Deactivation
 ```py
-# Activate some groups and deactivate others
-cs3 = CS("Stage 3", 
-         duration=7,
-         s_group=["New Girder", "Old Girder"], 
-         s_age=[7, 80], 
-         s_type=["A", "D"],  # Activate New Girder, Deactivate Old Girder
-         b_group=["New Support", "Old Support"], 
-         b_pos=["DEFORMED", "DEFORMED"], 
-         b_type=["A", "D"],  # Activate New Support, Deactivate Old Support
-         l_group="Construction Load", 
-         l_day="FIRST", 
-         l_type="A")
+#Create Node and Element
+for j in range(6):
+    for i in range(2):
+        Node(i*10,j*2,0)
+        Node.create()
+j = 0
+for k in range(6):   
+    for i in range(1,2):
+        Element.Beam(i +j,i+1 +j)
+        Element.create()
+    j = j + 2
+
+
+# Create structural groups
+Group.Structure("CS1", nlist=[1, 2], elist=[1])
+Group.Structure("CS2", nlist=[3, 4, 5,6], elist=[2, 3])
+Group.Structure("CS3", nlist=[7, 8, 9,10], elist=[4, 5,6])
+
+# Create boundary and load groups
+Group.Boundary("BG1")
+Group.Boundary("BG2")
+Group.Load("Load group 1")
+Group.Load("Load group 2")
+
+Group.create()
+
+#Create Stage
+CS("Stage 1",17,["CS1","CS2"],[10,7],"A",["BG1","BG2"],["DEFORMED","ORIGINAL"],"A","Load Group 1","FIRST","A")
+CS("Stage 2",10,["CS2","CS3"],[7,7],["D","A"],["BG2"],["ORIGINAL"],"D")
+CS.create()
 ```
 
 #### Advanced Options
 ```py
-# Construction stage with advanced analysis options
-cs4 = CS("Complex Stage", 
-         duration=21,
-         s_group="Complex Structure", 
-         s_age=14, 
-         s_type="A",
-         sr_stage=True,      # Save stage results
-         ad_stage=True,      # Save additional step results
-         load_in=True,       # Use load incremental steps
-         nl=10,              # 10 incremental steps
-         addstp=[1, 2, 3])   # Additional steps to save
+#Create Node and Element
+for j in range(6):
+    for i in range(2):
+        Node(i*10,j*2,0)
+        Node.create()
+j = 0
+for k in range(6):   
+    for i in range(1,2):
+        Element.Beam(i +j,i+1 +j)
+        Element.create()
+    j = j + 2
+
+
+# Create structural groups
+Group.Structure("CS1", nlist=[1, 2], elist=[1])
+Group.Structure("CS2", nlist=[3, 4, 5,6], elist=[2, 3])
+Group.Structure("CS3", nlist=[7, 8, 9,10], elist=[4, 5,6])
+
+# Create boundary and load groups
+Group.Boundary("BG1")
+Group.Boundary("BG2")
+Group.Load("Load group 1")
+Group.Load("Load group 2")
+
+Group.create()
+
+#Create Stage
+CS("Stage 1",7,"CS1",10,"A","BG1","DEFORMED","A","Load Group 1","FIRST","A")
+CS("Stage 2",20,"CS2",10,"A","BG2","DEFORMED","A",sr_stage=True, ad_stage=True, load_in=True, nl=6, addstp=[1, 2, 3])
+CS.create
+CS.create()
 ```
 
 ### Methods
@@ -169,146 +224,7 @@ Deletes all construction stage data from both Python and Civil NX.
 
 ```py
 CS.delete()
-```
 
----
-
-## Construction Stage Workflow Examples
-
-### Bridge Construction Sequence
-```py
-# Create structural groups for different bridge parts
-Group.Structure("Pier 1", nlist=[1, 2, 3], elist=[1, 2])
-Group.Structure("Pier 2", nlist=[4, 5, 6], elist=[3, 4])
-Group.Structure("Deck Span 1", nlist=[7, 8, 9], elist=[5, 6])
-Group.Structure("Deck Span 2", nlist=[10, 11, 12], elist=[7, 8])
-
-# Create boundary groups
-Group.Boundary("Foundation Support")
-Group.Boundary("Expansion Joint")
-
-# Create load groups
-Group.Load("Self Weight")
-Group.Load("Construction Load")
-Group.Load("Traffic Load")
-
-Group.create()
-
-# Stage 1: Construct Piers
-cs1 = CS("Pier Construction", 
-         duration=30,
-         s_group=["Pier 1", "Pier 2"], 
-         s_age=[28, 28], 
-         s_type=["A", "A"],
-         b_group="Foundation Support", 
-         b_pos="DEFORMED", 
-         b_type="A",
-         l_group="Self Weight", 
-         l_day="FIRST", 
-         l_type="A")
-
-# Stage 2: Construct First Deck Span
-cs2 = CS("Deck Span 1", 
-         duration=21,
-         s_group="Deck Span 1", 
-         s_age=21, 
-         s_type="A",
-         l_group="Construction Load", 
-         l_day="FIRST", 
-         l_type="A")
-
-# Stage 3: Construct Second Deck Span and Apply Traffic Load
-cs3 = CS("Deck Span 2 & Traffic", 
-         duration=21,
-         s_group="Deck Span 2", 
-         s_age=21, 
-         s_type="A",
-         b_group="Expansion Joint", 
-         b_pos="DEFORMED", 
-         b_type="A",
-         l_group=["Construction Load", "Traffic Load"], 
-         l_day=["LAST", "LAST"], 
-         l_type=["D", "A"])  # Remove construction load, add traffic load
-
-CS.create()
-```
-
-### Demolition and Reconstruction
-```py
-# Groups for existing and new structures
-Group.Structure("Old Structure", elist=[1, 2, 3])
-Group.Structure("New Structure", elist=[4, 5, 6])
-Group.Boundary("Temporary Support")
-Group.Load("Existing Load")
-Group.Load("New Load")
-Group.create()
-
-# Initial stage: Existing structure with loads
-cs1 = CS("Existing Condition", 
-         duration=0,
-         s_group="Old Structure", 
-         s_age=3650,  # 10 years old
-         s_type="A",
-         l_group="Existing Load", 
-         l_day="FIRST", 
-         l_type="A")
-
-# Stage 2: Add temporary support before demolition
-cs2 = CS("Temporary Support", 
-         duration=1,
-         b_group="Temporary Support", 
-         b_pos="DEFORMED", 
-         b_type="A")
-
-# Stage 3: Demolish old structure (with 75% load redistribution)
-cs3 = CS("Demolition", 
-         duration=1,
-         s_group="Old Structure", 
-         s_age=75,  # 75% redistribution
-         s_type="D",
-         l_group="Existing Load", 
-         l_day="FIRST", 
-         l_type="D")
-
-# Stage 4: Construct new structure
-cs4 = CS("New Construction", 
-         duration=28,
-         s_group="New Structure", 
-         s_age=28, 
-         s_type="A",
-         b_group="Temporary Support", 
-         b_pos="DEFORMED", 
-         b_type="D",  # Remove temporary support
-         l_group="New Load", 
-         l_day="LAST", 
-         l_type="A")
-
-CS.create()
-```
-
-### Nonlinear Analysis with Load Steps
-```py
-# Heavy load application with incremental steps
-Group.Structure("Main Structure", elist=[1, 2, 3, 4])
-Group.Load("Heavy Load")
-Group.create()
-
-# Construction stage with incremental loading
-cs1 = CS("Heavy Loading", 
-         duration=7,
-         s_group="Main Structure", 
-         s_age=28, 
-         s_type="A",
-         l_group="Heavy Load", 
-         l_day="FIRST", 
-         l_type="A",
-         sr_stage=True,      # Save results
-         ad_stage=True,      # Save additional step results
-         load_in=True,       # Enable incremental loading
-         nl=15,              # 15 load steps
-         addstp=[3, 7, 10])  # Save results at steps 3, 7, and 10
-
-CS.create()
 ```
 
 ---
@@ -320,99 +236,117 @@ from midasapi import *
 
 MAPI_KEY("eyJ1ciI6IklOMjQwN0ZZVDIiLCJwZyI6ImNpdmlsIiwi")  # Paste your Mapi Key
 
-# Create nodes and elements for bridge model
-for i in range(12):
-    Node(i*5, 0, 0)
-Node.create()
+# =============================================================================
+# CREATE STRUCTURE ONCE - Base Model
+# =============================================================================
 
-for i in range(11):
-    Element.Beam(i+1, i+2)
-Element.create()
+print("Creating Base Structure...")
 
-# Create structural groups for bridge components
-Group.Structure("Foundation", nlist=[1, 2], elist=[1])
-Group.Structure("Pier 1", nlist=[3, 4, 5], elist=[2, 3])
-Group.Structure("Pier 2", nlist=[7, 8, 9], elist=[6, 7])
-Group.Structure("Girder Span 1", nlist=[5, 6, 7], elist=[4, 5])
-Group.Structure("Girder Span 2", nlist=[9, 10, 11], elist=[8, 9])
-Group.Structure("Deck", nlist=[2, 5, 7, 9, 12], elist=[10, 11])
+# Create nodes
+for j in range(6):
+    for i in range(2):
+        Node(i*10, j*2, 0)
+        Node.create()
 
-# Create boundary and load groups
-Group.Boundary("Fixed Support")
-Group.Boundary("Expansion Joint")
-Group.Load("Dead Load")
+# Create elements
+j = 0
+for k in range(6):   
+    for i in range(1, 2):
+        Element.Beam(i + j, i + 1 + j)
+        Element.create()
+    j = j + 2
+
+print("Nodes and Elements Created")
+
+# =============================================================================
+# CREATE GROUPS ONCE - Define All Components
+# =============================================================================
+
+print("Creating Groups...")
+
+# Create structural groups
+Group.Structure("CS1", nlist=[1, 2], elist=[1])
+Group.Structure("CS2", nlist=[3, 4, 5, 6], elist=[2, 3])
+Group.Structure("CS3", nlist=[7, 8, 9, 10], elist=[4, 5, 6])
+
+# Create boundary groups
+Group.Boundary("BG1")
+Group.Boundary("BG2")
+Group.Boundary("BG3")
+
+# Create load groups
+Group.Load("Load Group 1")
+Group.Load("Load Group 2")
 Group.Load("Construction Load")
-Group.Load("Live Load")
 
 Group.create()
+print("All Groups Created")
 
-# Construction Stage 1: Foundation and Fixed Support
-cs1 = CS("Foundation Stage", 
-         duration=28,
-         s_group="Foundation", 
-         s_age=28, 
-         s_type="A",
-         b_group="Fixed Support", 
-         b_pos="ORIGINAL", 
-         b_type="A",
-         l_group="Dead Load", 
-         l_day="FIRST", 
-         l_type="A")
+# =============================================================================
+# CONSTRUCTION STAGING SEQUENCE - All Cases Implemented
+# =============================================================================
 
-# Construction Stage 2: Piers Construction
-cs2 = CS("Pier Construction", 
-         duration=21,
-         s_group=["Pier 1", "Pier 2"], 
-         s_age=[21, 21], 
-         s_type=["A", "A"],
-         l_group="Construction Load", 
-         l_day="FIRST", 
-         l_type="A")
+print("\nCreating Construction Stages...")
 
-# Construction Stage 3: First Girder Span
-cs3 = CS("Girder Span 1", 
-         duration=14,
-         s_group="Girder Span 1", 
-         s_age=14, 
-         s_type="A",
-         sr_stage=True,
-         ad_stage=True)
+# CASE 1: Single Group Activation
+# Stage 1: Activate only CS1 
+CS("Stage 1 - Single Group", 
+   duration=7, 
+   s_group="CS1", 
+   s_age=10, 
+   s_type="A", 
+   b_group="BG1", 
+   b_pos="DEFORMED", 
+   b_type="A", 
+   l_group="Load Group 1", 
+   l_day="FIRST", 
+   l_type="A")
 
-# Construction Stage 4: Second Girder Span with Expansion Joint
-cs4 = CS("Girder Span 2", 
-         duration=14,
-         s_group="Girder Span 2", 
-         s_age=14, 
-         s_type="A",
-         b_group="Expansion Joint", 
-         b_pos="DEFORMED", 
-         b_type="A")
+print("Stage 1: Single Group Activation - CS1")
 
-# Construction Stage 5: Deck Construction and Load Transfer
-cs5 = CS("Deck & Load Transfer", 
-         duration=7,
-         s_group="Deck", 
-         s_age=7, 
-         s_type="A",
-         l_group=["Construction Load", "Live Load"], 
-         l_day=["FIRST", "LAST"], 
-         l_type=["D", "A"],  # Remove construction load, add live load
-         load_in=True,       # Use incremental steps for live load
-         nl=8)               # 8 incremental steps
+# CASE 2: Multiple Group Activation  
+# Stage 2: Activate multiple groups BG2 and BG3 simultaneously
+CS("Stage 2 - Multiple Groups", 
+   duration=17, 
+   s_group="CS2", 
+   s_age=10, 
+   s_type="A", 
+   b_group=["BG2", "BG3"], 
+   b_pos=["DEFORMED", "ORIGINAL"], 
+   b_type="A", 
+   l_group="Load Group 2", 
+   l_day="FIRST", 
+   l_type="A")
 
-# Create all construction stages in Civil NX
+print("Stage 2: Multiple Group Activation - BG2 & BG3")
+
+# CASE 3: Mixed Activation and Deactivation
+# Stage 3: Deactivate CS2, Activate CS3 (mixed operations)
+CS("Stage 3 - Mixed Operations", 
+   duration=10, 
+   s_group=["CS2", "CS3"], 
+   s_age=[7, 7], 
+   s_type=["D", "A"], 
+   b_group=["BG2"], 
+   b_pos=["ORIGINAL"], 
+   b_type="D")
+
+print("Stage 3: Mixed Operations - Deactivate CS2, Activate CS3")
+
+# CASE 4: Advanced Options with Special Parameters
+# Stage 4: Advanced staging with additional control parameters
+CS("Stage 4 - Advanced Options", 
+   duration=20,  
+   l_group=["Construction Load"], 
+   l_day=["FIRST"], 
+   l_type=["A"],
+   ad_stage=True,      # Additional stage options
+   load_in=True,       # Incremental load application
+   nl=6,               # Number of load steps
+   addstp=[1, 2, 3])   # Additional step control
+
+print("Stage 4: Advanced Options - Full parameter control")
+
+# Create all construction stages
 CS.create()
-
-# Display construction stage information
-print("Construction Stages Created:")
-for cs in CS.CSA:
-    print(f"\nStage {cs.ID}: {cs.NAME}")
-    print(f"  Duration: {cs.DURATION} days")
-    print(f"  Active Structure Groups: {len(cs.act_structure_groups)}")
-    print(f"  Active Boundary Groups: {len(cs.act_boundary_groups)}")
-    print(f"  Active Load Groups: {len(cs.act_load_groups)}")
-    print(f"  Deactive Structure Groups: {len(cs.deact_structure_groups)}")
-    print(f"  Save Results: {cs.SR_stage}")
-    if cs.Load_IN:
-        print(f"  Load Steps: {cs.NL}")
 ```

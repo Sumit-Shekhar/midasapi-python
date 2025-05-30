@@ -78,3 +78,11 @@ Thickness.delete()
 
 
 
+### Examples
+```py
+# Rectangular Section Example
+for i in range(5):
+    Thickness(i+0.1)
+
+Thickness.create()
+```
